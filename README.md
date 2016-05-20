@@ -2,6 +2,8 @@
 
 A library for functional data types in D.
 
+[![Build Status](https://travis-ci.org/Gab-km/darjeeling.svg?branch=master)](https://travis-ci.org/Gab-km/darjeeling)
+
 ## Usage
 
 ```dlang
