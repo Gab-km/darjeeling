@@ -1,0 +1,11 @@
+language: d
+
+d:
+  - dmd
+
+branches:
+  only:
+    - master
+
+notifications:
+  email: true

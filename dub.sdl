@@ -1,0 +1,7 @@
+name "darjeeling"
+description "A library for functional data types in D."
+copyright "Copyright © 2016, Kazuhiro Matsushima"
+authors "Kazuhiro Matsushima"
+homepage "https://github.com/Gab-km/darjeeling"
+license "BSL-1.0"
+buildType "release"
