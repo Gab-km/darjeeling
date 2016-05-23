@@ -7,6 +7,10 @@
  */
 module darjeeling.maybe;
 
+import std.format : format;
+import std.traits : fullyQualifiedName;
+import darjeeling.assertion;
+
 /**
  * A interface to represent an optional value.
  *
@@ -104,9 +108,28 @@ final class Just(T) : Maybe!T
 
     unittest
     {
-        auto just = new Just!int(3);
-        auto value = just.fromJust();
-        assert(value == 3);
+        auto expected = 3;
+        auto just = new Just!int(expected);
+        auto actual = just.fromJust();
+        assertEquals(expected, actual);
+    }
+
+    override string toString()
+    {
+        return format("Just!%s(%s)", fullyQualifiedName!T, this.value);
+    }
+
+    override bool opEquals(Object o)
+    {
+        if (typeid(o) == typeid(this))
+        {
+            auto other = cast(Just!T)(o);
+            return this.value == other.value;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
 
@@ -144,30 +167,70 @@ final class Nothing(T) : Maybe!T
     unittest
     {
         auto nothing = new Nothing!string();
-        try
-        {
-            auto value = nothing.fromJust();
-        }
-        catch (Exception ex)
-        {
-            assert(ex.msg == "Invalid operation: Nothing(T) cannot return its value.");
-            return;
-        }
-        assert(false);
+        auto ex = trap!(Nothing!string, string)(nothing, function(Nothing!string n) => n.fromJust());
+        auto expected = "Invalid operation: Nothing(T) cannot return its value.";
+        assertEquals(expected, ex.msg);
+    }
+
+    override string toString()
+    {
+        return format("Nothing!%s", fullyQualifiedName!T);
+    }
+
+    override bool opEquals(Object o)
+    {
+        return (typeid(o) == typeid(this));
     }
 }
 
 unittest
 {
-    Maybe!int just = Maybe!int.just(2);
-    assert(just.isJust);
-    assert(!just.isNothing);
-    auto value = just.fromJust();
-    assert(value == 2);
-}
-unittest
-{
-    Maybe!string nothing = Maybe!string.nothing();
-    assert(!nothing.isJust);
-    assert(nothing.isNothing);
+    // Just(T)
+    {
+        auto expected = 2;
+        Maybe!int just = Maybe!int.just(expected);
+        assert(just.isJust);
+        assert(!just.isNothing);
+        auto actual = just.fromJust();
+        assertEquals(expected, actual);
+    }
+    // Nothing(T)
+    {
+        Maybe!string nothing = Maybe!string.nothing();
+        assert(!nothing.isJust);
+        assert(nothing.isNothing);
+    }
+    // Equality
+    {
+        {
+            auto maybe1 = Maybe!int.just(1);
+            auto maybe2 = Maybe!int.just(1);
+            assertEquals(maybe1, maybe2);
+        }
+        {
+            auto maybe1 = Maybe!string.just("hoge");
+            auto maybe2 = Maybe!string.just("fuga");
+            assertNotEquals(maybe1, maybe2);
+        }
+        {
+            auto maybe1 = Maybe!short.just(1);
+            auto maybe2 = Maybe!long.just(1);
+            assertNotObjEquals(maybe1, maybe2);
+        }
+        {
+            auto maybe1 = Maybe!int.just(1);
+            auto maybe2 = Maybe!int.nothing();
+            assertNotEquals(maybe1, maybe2);
+        }
+        {
+            auto maybe1 = Maybe!string.nothing();
+            auto maybe2 = Maybe!int.nothing();
+            assertNotObjEquals(maybe1, maybe2);
+        }
+        {
+            auto maybe1 = Maybe!double.nothing();
+            auto maybe2 = Maybe!double.nothing();
+            assertEquals(maybe1, maybe2);
+        }
+    }
 }
