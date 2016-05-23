@@ -9,6 +9,7 @@ A library for functional data types in D.
 ```dlang
 import std.stdio : writeln;
 import darjeeling.maybe;
+import darjeeling.either;
 
 void main()
 {
@@ -17,9 +18,19 @@ void main()
     {
         writeln(maybe.fromJust());  //#=> 42
     }
+    
+    auto either = Either!(string, int).right(33-4);
+    if (either.isRight)
+    {
+        writeln(either.right());    //#=> 29
+    }
 }
 ```
 
 ## Installation
+
+TODO
+
+## Documentation
 
 TODO

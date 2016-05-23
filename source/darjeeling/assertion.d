@@ -1,3 +1,10 @@
+/**
+ * A module for assertion functions
+ *
+ * Copyright: (C) Kazuhiro Matsushima 2016.
+ * License:   <a href="http://www.boost.org/LICENSE_1_0.txt">Boost License 1.0</a>.
+ * Authors:   Kazuhiro Matsushima
+ */
 module darjeeling.assertion;
 
 import std.stdio : writefln;

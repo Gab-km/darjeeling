@@ -2,10 +2,7 @@ language: d
 
 d:
   - dmd
-
-branches:
-  only:
-    - master
+  - ldc
 
 notifications:
   email: true
