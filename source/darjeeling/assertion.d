@@ -1,4 +1,13 @@
 /**
+ *          __                        __                  __     __
+ *         / /                       /_/ _____            \ \   /_/
+ *   _____/ / _____     __   ___    __  / ___ \  _____    / /  __  __  ___  _____
+ *  / ___  / / ___ \    \ \_/__/   / / / _____/ / ___ \  / /  / / / /_/  / / ___ \
+ * / /__/ / / /__/  \   / _/      / / / /__/ / / _____/ / /  / / / _/ / / / /__/ /
+ * \_____/  \_____/\_\ /_/  __   / /  \_____/ / /__/ /  \_\ /_/ /_/  /_/ _\___  /
+ *                         / /__/ /           \_____/                   / /__/ /
+ *                         \_____/                                      \_____/
+ *
  * A module for assertion functions
  *
  * Copyright: (C) Kazuhiro Matsushima 2016.
@@ -49,15 +58,28 @@ package void assertNotEquals(T)(T expected, T actual)
     }
 }
 
-package Exception trap(TIn, TReturn)(TIn target, TReturn function(TIn) f)
+package Throwable trap(TReturn)(TReturn function() f)
+{
+    try
+    {
+        f();
+    }
+    catch (Throwable th)
+    {
+        return th;
+    }
+    assert(false);
+}
+
+package Throwable trap(TIn, TReturn)(TIn target, TReturn function(TIn) f)
 {
     try
     {
         f(target);
     }
-    catch (Exception ex)
+    catch (Throwable th)
     {
-        return ex;
+        return th;
     }
     assert(false);
 }

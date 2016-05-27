@@ -4,12 +4,15 @@ A library for functional data types in D.
 
 [![Build Status](https://travis-ci.org/Gab-km/darjeeling.svg?branch=master)](https://travis-ci.org/Gab-km/darjeeling)
 
+[![Dub version](https://img.shields.io/dub/v/darjeeling.svg)](https://code.dlang.org/packages/darjeeling)
+
 ## Usage
 
 ```dlang
 import std.stdio : writeln;
-import darjeeling.maybe;
-import darjeeling.either;
+import darjeeling.maybe : Maybe;
+import darjeeling.either : Either;
+import darjeeling.trial : Trial;
 
 void main()
 {
@@ -23,6 +26,17 @@ void main()
     if (either.isRight)
     {
         writeln(either.right());    //#=> 29
+    }
+    
+    auto trial = Trial!int.trying({
+        auto x = 1;
+        if (x > 0) throw new Exception("positive");
+        return x;
+    });
+    if (trial.isFailure)
+    {
+        auto left = trial.getOrLeft();
+        writeln(left.left().msg);   //#=> positive
     }
 }
 ```
