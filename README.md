@@ -43,7 +43,13 @@ void main()
 
 ## Installation
 
-TODO
+You can use this package with DUB:
+
+```json
+dependencies {
+    "darjeeling": "~>0.3.0"
+}
+```
 
 ## Documentation
 
